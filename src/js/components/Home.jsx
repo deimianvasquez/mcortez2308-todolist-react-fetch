@@ -9,6 +9,26 @@ const Home = () => {
 
 	const [todolist, setTodoList] = useState([]);
 
+	const crearUsuario = async (user) => {
+		try {
+			const response = await fetch(`https://playground.4geeks.com/todo/users/${user}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					username: user
+				})
+			});
+
+			if (response.ok) {
+				getTareas();
+			}
+		} catch (error) {
+			console.error("Error al crear el usuario:", error);
+		}
+	}
+
 	const getTareas = async () => {
 		try {
 			const response = await fetch("https://playground.4geeks.com/todo/users/mcortez");
@@ -18,7 +38,7 @@ const Home = () => {
 			}
 			if (response.status === 404) {
 				console.log("Usuario no encontrado");
-				// Crear un nuevo usuario
+				crearUsuario("mcortez");
 			}
 
 		} catch (error) {
@@ -79,6 +99,33 @@ const Home = () => {
 		}
 	}
 
+	const actualizarTarea = async (id) => {
+		try {
+			const tareaActualizada = todolist.find(tarea => tarea.id === id);
+			if (!tareaActualizada) {
+				console.error("Tarea no encontrada");
+				return;
+			}
+
+			const response = await fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					...tareaActualizada,
+					is_done: !tareaActualizada.is_done
+				})
+			});
+
+			if (response.ok) {
+				getTareas();
+			}
+		} catch (error) {
+			console.error("Error al actualizar la tarea:", error);
+		}
+	}
+
 	useEffect(() => {
 		getTareas();
 	}, []);
@@ -105,10 +152,12 @@ const Home = () => {
 							todolist.map((tarea, index) => (
 								<li key={index}>
 									{tarea.label}
-									<span className="update-task" onClick={() => actualizarTarea(tarea.id)}>{tarea.is_done ? <i className="fa-regular fa-circle-check"></i> : <i className="fa-regular fa-circle"></i>}</span>
-									<span className="delete-signal" onClick={() => eliminarTarea(tarea.id)}>
-										<i className="fa-regular fa-trash-can"></i>
-									</span>
+									<div className="task-actions">
+										<span className="update-task" onClick={() => actualizarTarea(tarea.id)}>{tarea.is_done ? <i className="fa-regular fa-circle-check"></i> : <i className="fa-regular fa-circle"></i>}</span>
+										<span className="delete-signal" onClick={() => eliminarTarea(tarea.id)}>
+											<i className="fa-regular fa-trash-can"></i>
+										</span>
+									</div>
 								</li>
 							))
 						)

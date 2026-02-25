@@ -19,19 +19,15 @@ ul li {
     align-items: center;
     justify-content: space-between;
     padding: 7px;
+    border-radius: 5px;
 }
 
 ul li:hover {
     background-color: #decece;
 }
 
-
 ul li .delete-signal{
     color: red;
     margin: 7px;
-    opacity: 0;    
 }
 
-ul li .delete-signal:hover{
-    opacity: 1;
-}
