@@ -105,7 +105,7 @@ const Home = () => {
 							todolist.map((tarea, index) => (
 								<li key={index}>
 									{tarea.label}
-									<span>{tarea.is_done ? "✔️" : "❌"}</span>
+									<span className="update-task" onClick={() => actualizarTarea(tarea.id)}>{tarea.is_done ? <i className="fa-regular fa-circle-check"></i> : <i className="fa-regular fa-circle"></i>}</span>
 									<span className="delete-signal" onClick={() => eliminarTarea(tarea.id)}>
 										<i className="fa-regular fa-trash-can"></i>
 									</span>
