@@ -10,8 +10,8 @@
 
 */
 
-.inputtext{
-    border: 1px solid red;
+ul{
+    padding: 0px;
 }
 
 ul li {
@@ -19,7 +19,9 @@ ul li {
     align-items: center;
     justify-content: space-between;
     padding: 7px;
+    border: 1px solid rgb(237, 234, 234);
     border-radius: 5px;
+    margin: 10px 0px;
 }
 
 ul li:hover {

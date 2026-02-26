@@ -9,6 +9,8 @@ const Home = () => {
 
 	const [todolist, setTodoList] = useState([]);
 
+	const [statusTasks, setStatusTasks] = useState("alltasks");
+
 	const crearUsuario = async (user) => {
 		try {
 			const response = await fetch(`https://playground.4geeks.com/todo/users/${user}`, {
@@ -130,39 +132,60 @@ const Home = () => {
 		getTareas();
 	}, []);
 
+	const tareasfiltradas = todolist.filter(tarea => {
+		if (statusTasks === "donetasks") return tarea.is_done
+		if (statusTasks === "pendingtasks") return !tarea.is_done
+		return true;
+	});
+
 	return (
-		<div className="container display-flex justify-content-center">
-			<div className="row">
+		<div className="container">
+			<div className="row justify-content-center">
 				<div className="col-12 col-md-6">
-					<h1>Mi Lista de Tareas</h1>
-					<input className="inputtext"
+					<h1 className="text-center">Mi Lista de Tareas</h1>
+					<input className="form-control"
 						type="text"
 						name="label"
 						placeholder="Agrega la tarea"
 						value={tarea.label}
 						onChange={handleChange}
 						onKeyDown={agregarTarea} />
-				</div>
 
-				<ul>
-					{
-						todolist.length <= 0 ? (
-							<li>No hay tareas</li>
-						) : (
-							todolist.map((tarea, index) => (
-								<li key={index}>
-									{tarea.label}
-									<div className="task-actions">
-										<span className="update-task" onClick={() => actualizarTarea(tarea.id)}>{tarea.is_done ? <i className="fa-regular fa-circle-check"></i> : <i className="fa-regular fa-circle"></i>}</span>
-										<span className="delete-signal" onClick={() => eliminarTarea(tarea.id)}>
-											<i className="fa-regular fa-trash-can"></i>
-										</span>
-									</div>
-								</li>
-							))
-						)
-					}
-				</ul>
+					<ul>
+						{
+							tareasfiltradas.length <= 0 ? (
+								<li>No hay tareas</li>
+							) : (
+								tareasfiltradas.map((tarea, index) => (
+									<li key={index}>
+										{tarea.label}
+										<div className="task-actions">
+											<span className="update-task" onClick={() => actualizarTarea(tarea.id)}>{tarea.is_done ? <i className="fa-regular fa-circle-check"></i> : <i className="fa-regular fa-circle"></i>}</span>
+											<span className="delete-signal" onClick={() => eliminarTarea(tarea.id)}>
+												<i className="fa-regular fa-trash-can"></i>
+											</span>
+										</div>
+									</li>
+								))
+							)
+						}
+					</ul>
+					<p>Cantidad de Tareas: {todolist.length}</p>
+					<div className="filter-options d-flex justify-content-center">
+						<div className="form-check form-check-inline">
+							<input className="form-check-input" checked={statusTasks === "alltasks"} onChange={() => setStatusTasks("alltasks")} type="radio" name="inlineRadioOptions" id="alltasks" value="alltasks" />
+							<label className="form-check-label" htmlFor="alltasks">Todas las tareas</label>
+						</div>
+						<div className="form-check form-check-inline">
+							<input className="form-check-input" checked={statusTasks === "donetasks"} onChange={() => setStatusTasks("donetasks")} type="radio" name="inlineRadioOptions" id="donetasks" value="donetasks" />
+							<label className="form-check-label" htmlFor="donetasks">Tareas Completadas</label>
+						</div>
+						<div className="form-check form-check-inline">
+							<input className="form-check-input" checked={statusTasks === "pendingtasks"} onChange={() => setStatusTasks("pendingtasks")} type="radio" name="inlineRadioOptions" id="pendingtasks" value="pendingtasks" />
+							<label className="form-check-label" htmlFor="pendingtasks">Tareas Pendientes</label>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	)
